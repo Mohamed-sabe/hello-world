@@ -1,13 +1,6 @@
 
 version: 2.1
 jobs:
-  say-hello:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
   print-hello:
     docker:
       - image: circleci/node:13.8.0
@@ -18,20 +11,23 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - run: echo world
-  print-env:
+  build:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:2020.01
     steps:
-      - run: $MY_ENV_VAR
+      - checkout
+      - run:
+          name: "echo an env var that is part of our project"
+          command: |
+            echo $MY_ENV_VAR
 
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
       - print-hello
           requires:
             - say-hello
       - print_world
           requires:
             - print-hello
-      - print-env
+      - build
