@@ -1,0 +1,35 @@
+
+version: 2.1
+jobs:
+  say-hello:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: "Say hello"
+          command: "echo Hello, World!"
+  print_hello:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run:
+        name: "print hello"
+        command: "echo hello"
+  print_world:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run:
+        name: "print world"
+        command: "echo world"
+
+workflows:
+  say-hello-workflow:
+    jobs:
+      - say-hello
+      - print_hello
+          requires:
+            - say-hello
+      - print_world
+          requires:
+            - print_hello
